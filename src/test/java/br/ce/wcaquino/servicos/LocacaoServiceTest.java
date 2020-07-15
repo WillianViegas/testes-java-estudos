@@ -25,7 +25,7 @@ public class LocacaoServiceTest {
 		Locacao obj = ls.alugarFilme(usuario, filme);
 		
 		//Verificacao
-		Assert.assertTrue(obj.getValor() == 8.50);
+		Assert.assertEquals( 8.50, obj.getValor(), 0.01);
 		Assert.assertTrue(DataUtils.isMesmaData(obj.getDataLocacao(), new Date()));
 		Assert.assertTrue(DataUtils.isMesmaData(obj.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
 	}
