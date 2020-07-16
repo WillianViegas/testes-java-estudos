@@ -13,17 +13,17 @@ import br.ce.wcaquino.exceptions.LocadoraException;
 
 public class LocacaoService {
 	
-	public Locacao alugarFilme(Usuario usuario, List<Filme> filme) throws LocadoraException {
+	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws LocadoraException {
 		
 		if(usuario == null) {
 			throw new LocadoraException("Usuario vazio");
 		}
 		
-		if(filme == null || filme.isEmpty()) {
+		if(filmes == null || filmes.isEmpty()) {
 			throw new LocadoraException("Filme vazio");
 		}
 		
-		for(Filme x : filme) {
+		for(Filme x : filmes) {
 			if(x.getEstoque() == 0) {
 				throw new FilmeSemEstoqueException();
 			}
@@ -32,12 +32,21 @@ public class LocacaoService {
 		double valorLocacao = 0.0;
 		
 		Locacao locacao = new Locacao();
-		locacao.setFilmes(filme);
+		locacao.setFilmes(filmes);
 		locacao.setUsuario(usuario);
 		locacao.setDataLocacao(new Date());
 		
-		for(Filme x : filme) {
-			valorLocacao += x.getPrecoLocacao();
+		for(int i = 0; i < filmes.size(); i++) {
+			Filme filme = filmes.get(i);
+			Double valorFilme = filme.getPrecoLocacao();
+			switch(i) {
+			case 2: valorFilme = valorFilme * 0.75; break;
+			case 3: valorFilme = valorFilme * 0.50; break;
+			case 4: valorFilme = valorFilme * 0.25; break;
+			case 5: valorFilme = 0.0; break;
+			}
+			
+			valorLocacao += valorFilme;
 		}
 		
 		locacao.setValor(valorLocacao);
