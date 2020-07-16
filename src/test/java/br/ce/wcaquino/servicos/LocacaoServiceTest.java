@@ -36,23 +36,7 @@ public class LocacaoServiceTest {
 	
 	@Before
 	public void setup() {
-		System.out.println("Before");
 		ls = new LocacaoService();
-	}
-	
-	@After
-	public void tearDown() {
-		System.out.println("After");
-	}
-	
-	@BeforeClass
-	public static void setupClass() {
-		System.out.println("BeforeClass");
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-		System.out.println("AfterClass");
 	}
 	
 	@Test
@@ -62,9 +46,6 @@ public class LocacaoServiceTest {
 		Usuario usuario = new Usuario("Maicon");
 		Filme filme = new Filme("De volta para o futuro", 2, 8.50);
 		
-		
-		System.out.println("Teste!");
-
 		// Acao
 		Locacao obj = ls.alugarFilme(usuario, filme);
 
