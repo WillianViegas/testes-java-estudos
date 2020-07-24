@@ -8,6 +8,7 @@ import static br.ce.wcaquino.matchers.MatchersProprios.ehHojeComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -36,6 +37,10 @@ public class LocacaoServiceTest {
 
 	private LocacaoService ls;
 	
+	private LocacaoDAO dao;
+	
+	private SPCService spc;
+	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
 
@@ -45,8 +50,10 @@ public class LocacaoServiceTest {
 	@Before
 	public void setup() {
 		ls = new LocacaoService();
-		LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
+		dao = Mockito.mock(LocacaoDAO.class);
 		ls.setLocacaoDAO(dao);
+		spc = Mockito.mock(SPCService.class);
+		ls.setSPCService(spc);
 	}
 	
 	@Test
@@ -130,7 +137,19 @@ public class LocacaoServiceTest {
 		assertThat(retorno.getDataRetorno(), caiNumaSegunda());
 	}
 	
-	public static void main(String[] args) {
-		new BuilderMaster().gerarCodigoClasse(Locacao.class);
+	@Test
+	public void naoDeveAlugarFilmeParaNegativadoSPC() throws LocadoraException {
+		//cenario
+		Usuario usuario = umUsuario().agora();
+		Usuario usuario2 = umUsuario().comNome("Maicon").agora();
+		List<Filme> filmes = Arrays.asList(umFilme().agora());
+		
+		when(spc.possuiNegativacao(usuario)).thenReturn(true);
+		
+		exception.expect(LocadoraException.class);
+		exception.expectMessage("Usuario negativado");
+		
+		//acao
+		ls.alugarFilme(usuario, filmes);
 	}
 }
